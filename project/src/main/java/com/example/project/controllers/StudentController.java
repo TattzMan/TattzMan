@@ -112,5 +112,41 @@ public class StudentController {
         }
     }
 
-    // ... all other methods from your original controller
+    @GetMapping("/student/profile")
+    public String studentProfile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        String email = userDetails.getUsername();
+        Student student = userService.findStudentByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Student not found for email: " + email));
+        
+        List<Enrollment> enrollments = enrollmentService.getEnrollmentsByStudent(student);
+        model.addAttribute("student", student);
+        model.addAttribute("enrollments", enrollments);
+        return "student/profile";
+    }
+
+    @PostMapping("/student/profile/update")
+    public String updateStudentProfile(@AuthenticationPrincipal UserDetails userDetails,
+                                     @RequestParam String firstName,
+                                     @RequestParam String lastName,
+                                     @RequestParam String dateOfBirth,
+                                     @RequestParam Student.Session session,
+                                     Model model) {
+        String email = userDetails.getUsername();
+        Student student = userService.findStudentByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Student not found for email: " + email));
+        
+        student.setFirstName(firstName);
+        student.setLastName(lastName);
+        if (dateOfBirth != null && !dateOfBirth.isEmpty()) {
+            student.setDateOfBirth(java.time.LocalDate.parse(dateOfBirth));
+        }
+        student.setSession(session);
+        userService.updateStudent(student);
+        
+        List<Enrollment> enrollments = enrollmentService.getEnrollmentsByStudent(student);
+        model.addAttribute("successMessage", "Profile updated successfully!");
+        model.addAttribute("student", student);
+        model.addAttribute("enrollments", enrollments);
+        return "student/profile";
+    }
 }
