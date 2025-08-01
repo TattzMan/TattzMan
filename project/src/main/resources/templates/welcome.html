@@ -1,10 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .welcome-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .role-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            border-radius: 10px;
+        }
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .hero-section {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+    </style>
 </head>
 <body>
+<div class="container-fluid welcome-container">
+    <div class="row justify-content-center w-100">
+        <div class="col-lg-10">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <h1 class="display-4 font-weight-bold mb-3">
+                    <i class="fas fa-graduation-cap"></i> Learning Management System
+                </h1>
+                <p class="lead">Empowering Education Through Technology</p>
+                <p class="mb-5">Choose your role to access the system</p>
+            </div>
 
+            <!-- Role Selection Cards -->
+            <div class="row justify-content-center">
+                <!-- Student Card -->
+                <div class="col-md-4 mb-4">
+                    <div class="card role-card h-100 bg-primary text-white">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-user-graduate fa-4x mb-3"></i>
+                            <h4 class="card-title">Student</h4>
+                            <p class="card-text">Access your courses, assignments, and study materials</p>
+                            <ul class="list-unstyled mt-3">
+                                <li><i class="fas fa-check"></i> View Enrolled Courses</li>
+                                <li><i class="fas fa-check"></i> Access Study Materials</li>
+                                <li><i class="fas fa-check"></i> Submit Assignments</li>
+                                <li><i class="fas fa-check"></i> Track Progress</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center bg-transparent border-0">
+                            <a th:href="@{/login}" class="btn btn-light btn-lg btn-block">
+                                <i class="fas fa-sign-in-alt"></i> Login as Student
+                            </a>
+                            <a th:href="@{/student/signup}" class="btn btn-outline-light mt-2">
+                                <i class="fas fa-user-plus"></i> New Student? Sign Up
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teacher Card -->
+                <div class="col-md-4 mb-4">
+                    <div class="card role-card h-100 bg-dark text-white">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-chalkboard-teacher fa-4x mb-3"></i>
+                            <h4 class="card-title">Teacher</h4>
+                            <p class="card-text">Manage courses, upload materials, and grade assignments</p>
+                            <ul class="list-unstyled mt-3">
+                                <li><i class="fas fa-check"></i> Create & Manage Courses</li>
+                                <li><i class="fas fa-check"></i> Upload Study Materials</li>
+                                <li><i class="fas fa-check"></i> Create Assignments</li>
+                                <li><i class="fas fa-check"></i> Grade Submissions</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center bg-transparent border-0">
+                            <a th:href="@{/login}" class="btn btn-light btn-lg btn-block">
+                                <i class="fas fa-sign-in-alt"></i> Login as Teacher
+                            </a>
+                            <a th:href="@{/signup}" class="btn btn-outline-light mt-2">
+                                <i class="fas fa-user-plus"></i> New Teacher? Sign Up
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Card -->
+                <div class="col-md-4 mb-4">
+                    <div class="card role-card h-100 bg-danger text-white">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-user-shield fa-4x mb-3"></i>
+                            <h4 class="card-title">Administrator</h4>
+                            <p class="card-text">System administration and user management</p>
+                            <ul class="list-unstyled mt-3">
+                                <li><i class="fas fa-check"></i> Manage Users</li>
+                                <li><i class="fas fa-check"></i> System Overview</li>
+                                <li><i class="fas fa-check"></i> Course Management</li>
+                                <li><i class="fas fa-check"></i> System Settings</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center bg-transparent border-0">
+                            <a th:href="@{/login}" class="btn btn-light btn-lg btn-block">
+                                <i class="fas fa-sign-in-alt"></i> Admin Login
+                            </a>
+                            <small class="text-light">Contact system admin for account</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Info -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="welcome-card p-4">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
+                                <h5>Secure</h5>
+                                <p class="small text-muted">End-to-end encrypted data</p>
+                            </div>
+                            <div class="col-md-3">
+                                <i class="fas fa-clock fa-2x text-info mb-2"></i>
+                                <h5>24/7 Access</h5>
+                                <p class="small text-muted">Learn anytime, anywhere</p>
+                            </div>
+                            <div class="col-md-3">
+                                <i class="fas fa-mobile-alt fa-2x text-warning mb-2"></i>
+                                <h5>Mobile Friendly</h5>
+                                <p class="small text-muted">Responsive design</p>
+                            </div>
+                            <div class="col-md-3">
+                                <i class="fas fa-headset fa-2x text-primary mb-2"></i>
+                                <h5>Support</h5>
+                                <p class="small text-muted">24/7 technical support</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
