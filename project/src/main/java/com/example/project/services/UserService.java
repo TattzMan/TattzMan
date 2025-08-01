@@ -25,6 +25,7 @@ public class UserService {
     public UserService(StudentRepository studentRepository, TeacherRepository teacherRepository, AdminRepository adminRepository, PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
         this.teacherRepository = teacherRepository;
+        this.adminRepository = adminRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
