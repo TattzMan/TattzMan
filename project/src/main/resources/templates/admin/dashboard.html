@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#"><i class="fas fa-shield-alt"></i> Admin Panel</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/admin/dashboard}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/users}"><i class="fas fa-users"></i> Manage Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/courses}"><i class="fas fa-book"></i> Manage Courses</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/profile}"><i class="fas fa-user-cog"></i> Profile</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <span class="navbar-text mr-3"><i class="fas fa-user-shield"></i> <span sec:authentication="name"></span></span>
+            </li>
+            <li class="nav-item">
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-link nav-link text-white"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4"><i class="fas fa-home"></i> Welcome, Admin <span th:text="${admin.firstName}">Admin</span>!</h2>
+        </div>
+    </div>
+
+    <!-- System Statistics -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Total Students</h5>
+                            <h2 th:text="${totalStudents}">0</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-user-graduate fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a th:href="@{/admin/users}" class="text-white">View Details <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Total Teachers</h5>
+                            <h2 th:text="${totalTeachers}">0</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-chalkboard-teacher fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a th:href="@{/admin/users}" class="text-white">View Details <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Total Courses</h5>
+                            <h2 th:text="${totalCourses}">0</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-book fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a th:href="@{/admin/courses}" class="text-white">View Details <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Active Sessions</h5>
+                            <h2>1</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="text-white">System Online <i class="fas fa-check-circle"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-list"></i> Recent Students</h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${students.isEmpty()}" class="text-center text-muted py-4">
+                        <i class="fas fa-users fa-3x mb-3"></i>
+                        <p>No students registered yet.</p>
+                    </div>
+                    <div th:if="${!students.isEmpty()}">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Candidate Number</th>
+                                        <th>Session</th>
+                                        <th>Joined</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="student, iterStat : ${students}" th:if="${iterStat.index < 5}">
+                                        <td th:text="${student.firstName + ' ' + student.lastName}">Student Name</td>
+                                        <td th:text="${student.email}">student@email.com</td>
+                                        <td th:text="${student.candidateNumber}">12345</td>
+                                        <td>
+                                            <span class="badge badge-info" th:text="${student.session}">SESSION</span>
+                                        </td>
+                                        <td th:text="${#temporals.format(student.createdAt, 'dd MMM yyyy')}">Date</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center" th:if="${students.size() > 5}">
+                            <a th:href="@{/admin/users}" class="btn btn-primary">View All Students</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie"></i> System Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>Database</span>
+                        <span class="badge badge-success">Online</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>Authentication</span>
+                        <span class="badge badge-success">Active</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>File Upload</span>
+                        <span class="badge badge-success">Working</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Email Service</span>
+                        <span class="badge badge-warning">Disabled</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-cog"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a th:href="@{/admin/users}" class="btn btn-outline-primary btn-block mb-2">
+                        <i class="fas fa-users"></i> Manage Users
+                    </a>
+                    <a th:href="@{/admin/courses}" class="btn btn-outline-success btn-block mb-2">
+                        <i class="fas fa-book"></i> Manage Courses
+                    </a>
+                    <a th:href="@{/admin/profile}" class="btn btn-outline-info btn-block">
+                        <i class="fas fa-user-cog"></i> Update Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

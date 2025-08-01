@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#"><i class="fas fa-shield-alt"></i> Admin Panel</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/dashboard}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/users}"><i class="fas fa-users"></i> Manage Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/courses}"><i class="fas fa-book"></i> Manage Courses</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/admin/profile}"><i class="fas fa-user-cog"></i> Profile</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <span class="navbar-text mr-3"><i class="fas fa-user-shield"></i> <span sec:authentication="name"></span></span>
+            </li>
+            <li class="nav-item">
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-link nav-link text-white"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-user-cog"></i> Admin Profile</h4>
+                </div>
+                <div class="card-body">
+                    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+                        <i class="fas fa-check-circle"></i> <span th:text="${successMessage}"></span>
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <form th:action="@{/admin/profile/update}" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="firstName"><i class="fas fa-user"></i> First Name</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" 
+                                           th:value="${admin.firstName}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="lastName"><i class="fas fa-user"></i> Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" 
+                                           th:value="${admin.lastName}" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                            <input type="email" class="form-control" id="email" th:value="${admin.email}" readonly>
+                            <small class="form-text text-muted">Email cannot be changed for security reasons.</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="role"><i class="fas fa-shield-alt"></i> Role</label>
+                            <input type="text" class="form-control" id="role" th:value="${admin.role}" readonly>
+                            <small class="form-text text-muted">Role is assigned by system administrator.</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Account Created</label>
+                            <input type="text" class="form-control" th:value="${#temporals.format(admin.createdAt, 'dd MMMM yyyy HH:mm')}" readonly>
+                        </div>
+
+                        <hr>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save"></i> Update Profile
+                            </button>
+                            <a th:href="@{/admin/dashboard}" class="btn btn-secondary btn-lg ml-2">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Account Security Section -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-lock"></i> Account Security</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-shield-alt text-success fa-2x mr-3"></i>
+                                <div>
+                                    <h6 class="mb-0">Two-Factor Authentication</h6>
+                                    <small class="text-muted">Not configured</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-key text-warning fa-2x mr-3"></i>
+                                <div>
+                                    <h6 class="mb-0">Password</h6>
+                                    <small class="text-muted">Last changed: Unknown</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-outline-warning" disabled>
+                            <i class="fas fa-key"></i> Change Password (Coming Soon)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
