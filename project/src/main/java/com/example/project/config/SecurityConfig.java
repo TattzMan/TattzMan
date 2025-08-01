@@ -2,6 +2,7 @@ package com.example.project.config;
 
 import com.example.project.repositories.StudentRepository;
 import com.example.project.repositories.TeacherRepository;
+import com.example.project.repositories.AdminRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,33 +16,33 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
- 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
+    private final AdminRepository adminRepository;
 
-    public SecurityConfig(StudentRepository studentRepository, TeacherRepository teacherRepository) {
+    public SecurityConfig(StudentRepository studentRepository, TeacherRepository teacherRepository, AdminRepository adminRepository) {
         this.studentRepository = studentRepository;
         this.teacherRepository = teacherRepository;
+        this.adminRepository = adminRepository;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/signup/**", "/css/**", "/js/**", "/images/**").permitAll() // Allow public access
-                        .requestMatchers("/student/**").hasRole("STUDENT") // Student role for student paths
-                        .requestMatchers("/teacher/**").hasRole("TEACHER") // Teacher role for teacher paths
-                        .anyRequest().authenticated() // All other requests require authentication
+                        .requestMatchers("/", "/login", "/signup/**", "/css/**", "/js/**", "/images/**", "/welcome").permitAll()
+                        .requestMatchers("/student/**").hasRole("STUDENT")
+                        .requestMatchers("/teacher/**").hasRole("TEACHER") 
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/dashboard-redirect", true)
                         .permitAll()
-                        .defaultSuccessUrl("/student/dashboard", true)
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -76,6 +77,15 @@ public class SecurityConfig {
                                         .username(teacher.getEmail())
                                         .password(teacher.getPassword())
                                         .roles("TEACHER")
+                                        .build());
+                    })
+                    .or(() -> {
+                        // If not found as teacher, try as admin
+                        return adminRepository.findByEmail(email)
+                                .map(admin -> org.springframework.security.core.userdetails.User.builder()
+                                        .username(admin.getEmail())
+                                        .password(admin.getPassword())
+                                        .roles("ADMIN")
                                         .build());
                     })
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
