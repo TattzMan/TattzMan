@@ -19,6 +19,7 @@ import java.util.Optional;
 public class UserService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
+    private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserService(StudentRepository studentRepository, TeacherRepository teacherRepository, PasswordEncoder passwordEncoder) {
