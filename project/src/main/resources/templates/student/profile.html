@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap"></i> Learning Management System</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/student/dashboard}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/student/courses}"><i class="fas fa-book"></i> My Courses</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/student/profile}"><i class="fas fa-user"></i> Profile</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <span class="navbar-text mr-3"><i class="fas fa-user-circle"></i> <span sec:authentication="name"></span></span>
+            </li>
+            <li class="nav-item">
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-link nav-link text-white"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-user"></i> Student Profile</h4>
+                </div>
+                <div class="card-body">
+                    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+                        <i class="fas fa-check-circle"></i> <span th:text="${successMessage}"></span>
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <form th:action="@{/student/profile/update}" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="firstName"><i class="fas fa-user"></i> First Name</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" 
+                                           th:value="${student.firstName}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="lastName"><i class="fas fa-user"></i> Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" 
+                                           th:value="${student.lastName}" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                                    <input type="email" class="form-control" id="email" th:value="${student.email}" readonly>
+                                    <small class="form-text text-muted">Email cannot be changed.</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="candidateNumber"><i class="fas fa-id-card"></i> Candidate Number</label>
+                                    <input type="text" class="form-control" id="candidateNumber" th:value="${student.candidateNumber}" readonly>
+                                    <small class="form-text text-muted">Candidate number cannot be changed.</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="dateOfBirth"><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                                    <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" 
+                                           th:value="${student.dateOfBirth}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="session"><i class="fas fa-calendar"></i> Session</label>
+                                    <select class="form-control" id="session" name="session">
+                                        <option value="JUNE" th:selected="${student.session == T(com.example.project.entities.Student.Session).JUNE}">June</option>
+                                        <option value="NOVEMBER" th:selected="${student.session == T(com.example.project.entities.Student.Session).NOVEMBER}">November</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Account Created</label>
+                            <input type="text" class="form-control" th:value="${#temporals.format(student.createdAt, 'dd MMMM yyyy HH:mm')}" readonly>
+                        </div>
+
+                        <hr>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save"></i> Update Profile
+                            </button>
+                            <a th:href="@{/student/dashboard}" class="btn btn-secondary btn-lg ml-2">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Academic Progress Section -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-line"></i> Academic Progress</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="border-right">
+                                <h4 class="text-primary" th:text="${enrollments != null ? enrollments.size() : 0}">0</h4>
+                                <p class="text-muted">Enrolled Courses</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="border-right">
+                                <h4 class="text-success">0</h4>
+                                <p class="text-muted">Completed Assignments</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h4 class="text-warning">0</h4>
+                            <p class="text-muted">Pending Submissions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-clock"></i> Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-history fa-3x mb-3"></i>
+                        <p>No recent activity to display.</p>
+                        <small>Activity will appear here when you interact with courses and assignments.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
