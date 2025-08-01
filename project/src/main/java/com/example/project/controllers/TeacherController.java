@@ -166,4 +166,31 @@ public class TeacherController {
                 .body(resource);
     }
 
+    @GetMapping("teacher/profile")
+    public String teacherProfile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        String email = userDetails.getUsername();
+        Teacher teacher = userService.findTeacherByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Teacher not found for email: " + email));
+        
+        model.addAttribute("teacher", teacher);
+        return "teacher/profile";
+    }
+
+    @PostMapping("teacher/profile/update")
+    public String updateTeacherProfile(@AuthenticationPrincipal UserDetails userDetails,
+                                     @RequestParam String firstName,
+                                     @RequestParam String lastName,
+                                     Model model) {
+        String email = userDetails.getUsername();
+        Teacher teacher = userService.findTeacherByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Teacher not found for email: " + email));
+        
+        teacher.setFirstName(firstName);
+        teacher.setLastName(lastName);
+        userService.updateTeacher(teacher);
+        
+        model.addAttribute("successMessage", "Profile updated successfully!");
+        model.addAttribute("teacher", teacher);
+        return "teacher/profile";
+    }
 }
