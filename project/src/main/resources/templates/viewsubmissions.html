@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Submissions for <span th:text="${assignment.title}"></span></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Learning App (Teacher)</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/teacher/dashboard}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/teacher/course/{id}(id=${assignment.course.id})}">Back to Course</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#" th:text="${assignment.title} + ' Submissions'"></a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <span class="navbar-text mr-3" sec:authentication="name"></span>
+            </li>
+            <li class="nav-item">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-link nav-link" style="color: white;">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Submissions for Assignment: <span th:text="${assignment.title}"></span></h2>
+
+    <div th:if="${submissions.isEmpty()}" class="alert alert-info">No submissions received for this assignment yet.</div>
+
+    <ul class="list-group">
+        <li class="list-group-item" th:each="submission : ${submissions}">
+            <h5>Student: <span th:text="${submission.student.firstName + ' ' + submission.student.lastName}"></span></h5>
+            <p>Submitted On: <span th:text="${#temporals.format(submission.submissionDate, 'dd-MM-yyyy HH:mm')}"></span></p>
+            <p>File: <a th:href="@{/teacher/submissions/download/{id}(id=${submission.id})}" class="btn btn-sm btn-info">Download Submission</a></p>
+
+            <div th:if="${submission.grade == null}">
+                <a th:href="@{/teacher/submissions/mark/{id}(id=${submission.id})}" class="btn btn-warning btn-sm">Mark Submission</a>
+            </div>
+            <div th:if="${submission.grade != null}">
+                <p><strong>Grade:</strong> <span th:text="${submission.grade}"></span>%</p>
+                <p><strong>Feedback:</strong> <span th:text="${submission.feedback}"></span></p>
+                <p>Marked By: <span th:text="${submission.markedBy.firstName + ' ' + submission.markedBy.lastName}"></span> on <span th:text="${#temporals.format(submission.markedDate, 'dd-MM-yyyy HH:mm')}"></span></p>
+                <a th:href="@{/teacher/submissions/mark/{id}(id=${submission.id})}" class="btn btn-outline-warning btn-sm">Re-mark Submission</a>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

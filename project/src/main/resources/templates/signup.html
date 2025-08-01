@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .signup-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        .form-group.dob-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .form-group.dob-group select {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="signup-container">
+    <h2 class="text-center mb-4">Sign Up</h2>
+
+    <div th:if="${errorMessage}" class="alert alert-danger">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <ul class="nav nav-tabs" id="signupTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="true">Student</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="teacher-tab" data-toggle="tab" href="#teacher" role="tab" aria-controls="teacher" aria-selected="false">Teacher</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="signupTabContent">
+        <div class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
+            <form th:action="@{/signup/student}" method="post">
+                <div class="form-group">
+                    <label for="studentFirstName">First Name</label>
+                    <input type="text" class="form-control" id="studentFirstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentLastName">Last Name</label>
+                    <input type="text" class="form-control" id="studentLastName" name="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentDOB">Date of Birth</label>
+                    <input type="date" class="form-control" id="studentDOB" name="dateOfBirth" required>
+                </div>
+                <div class="form-group">
+                    <label for="candidateNumber">Candidate Number</label>
+                    <input type="text" class="form-control" id="candidateNumber" name="candidateNumber" required>
+                </div>
+                <div class="form-group">
+                    <label>Session</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="sessionJune" name="session" value="JUNE" required>
+                        <label class="form-check-label" for="sessionJune">June</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="sessionNovember" name="session" value="NOVEMBER" required>
+                        <label class="form-check-label" for="sessionNovember">November</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="studentEmail">Email</label>
+                    <input type="email" class="form-control" id="studentEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentPassword">Password</label>
+                    <input type="password" class="form-control" id="studentPassword" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register as Student</button>
+            </form>
+        </div>
+
+        <div class="tab-pane fade" id="teacher" role="tabpanel" aria-labelledby="teacher-tab">
+            <form th:action="@{/signup/teacher}" method="post">
+                <div class="form-group">
+                    <label for="teacherFirstName">First Name</label>
+                    <input type="text" class="form-control" id="teacherFirstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacherLastName">Last Name</label>
+                    <input type="text" class="form-control" id="teacherLastName" name="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacherEmail">Email</label>
+                    <input type="email" class="form-control" id="teacherEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacherPassword">Password</label>
+                    <input type="password" class="form-control" id="teacherPassword" name="password" required>
+                </div>
+                <button class="btn btn-primary" onclick="window.location.href='teacher-dashboard.html'">
+                    Go to Teacher Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <p class="mt-3 text-center">Already have an account? <a th:href="@{/login}">Login here</a></p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

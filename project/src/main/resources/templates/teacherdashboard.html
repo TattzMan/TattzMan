@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Learning App (Teacher)</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/teacher/dashboard}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/teacher/courses/create}">Create New Course</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <span class="navbar-text mr-3" sec:authentication="name"></span>
+            </li>
+            <li class="nav-item">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-link nav-link" style="color: white;">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Welcome, <span th:text="${teacher.firstName}"></span>!</h2>
+
+    <div th:if="${param.courseCreated}" class="alert alert-success">
+        Course created successfully!
+    </div>
+
+    <h3 class="mb-3">Your Courses</h3>
+    <div th:if="${courses.isEmpty()}" class="alert alert-info">
+        You haven't created any courses yet.
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-4" th:each="course : ${courses}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${course.courseName}">Course Name</h5>
+                    <p class="card-text" th:text="${course.description}">Course Description</p>
+                    <a th:href="@{/teacher/course/{id}(id=${course.id})}" class="btn btn-primary mt-3">Manage Course</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
