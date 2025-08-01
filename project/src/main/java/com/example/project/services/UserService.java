@@ -22,7 +22,7 @@ public class UserService {
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(StudentRepository studentRepository, TeacherRepository teacherRepository, PasswordEncoder passwordEncoder) {
+    public UserService(StudentRepository studentRepository, TeacherRepository teacherRepository, AdminRepository adminRepository, PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
         this.teacherRepository = teacherRepository;
         this.passwordEncoder = passwordEncoder;
