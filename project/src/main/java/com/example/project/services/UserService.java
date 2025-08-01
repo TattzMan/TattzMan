@@ -66,6 +66,13 @@ public class UserService {
     }
 
     public void registerStudent(Student student) {
+        // Implementation for student registration
+        if (studentRepository.findByEmail(student.getEmail()).isPresent() || 
+            studentRepository.findByCandidateNumber(student.getCandidateNumber()).isPresent()) {
+            throw new IllegalStateException("Student with this email or candidate number already exists.");
+        }
+        student.setPassword(passwordEncoder.encode(student.getPassword()));
+        studentRepository.save(student);
 
     }
 }
