@@ -2,6 +2,7 @@ package com.example.project.services;
 
 
 
+import com.example.project.entities.Admin;
 import com.example.project.entities.Student;
 import com.example.project.entities.Teacher;
 import com.example.project.repositories.StudentRepository;
