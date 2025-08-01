@@ -75,6 +75,25 @@ public class UserService {
         studentRepository.save(student);
 
     }
+    public Student updateStudent(Student student) {
+        return studentRepository.save(student);
+    }
+
+    public Teacher updateTeacher(Teacher teacher) {
+        return teacherRepository.save(teacher);
+    }
+
+    public Admin registerAdmin(String firstName, String lastName, String email, String password) {
+        if (adminRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Admin with this email already exists.");
+        }
+        Admin admin = new Admin();
+        admin.setFirstName(firstName);
+        admin.setLastName(lastName);
+        admin.setEmail(email);
+        admin.setPassword(passwordEncoder.encode(password));
+        return adminRepository.save(admin);
+    }
 }
 
 
